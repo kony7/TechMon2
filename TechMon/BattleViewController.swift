@@ -19,13 +19,17 @@ class BattleViewController: UIViewController {
     @IBOutlet var enemyHPLabel: UILabel!
     @IBOutlet var enemyMPLabel: UILabel!
     
+    
     let techMonManager = TechMonManager.shared
     
-    var playerHP = 100
-    var playerMP = 100
-    var enemyHP = 100
-    var enemyMP = 100
+    var player: Character!
+    var enemy: Character!
     
+//    var playerHP = 100
+//    var playerMP = 100
+//    var enemyHP = 100
+//    var enemyMP = 100
+
     var gameTimer: Timer!
     var isPlayerAttackAvailable: Bool = true
     
@@ -34,13 +38,17 @@ class BattleViewController: UIViewController {
         
         playerNameLabel.text = "マグロ"
         playerImageView.image = UIImage(named: "tyutoro")
-        playerHPLabel.text =  "\(playerHP) / 100"
-        playerMPLabel.text =  "\(playerMP) / 20"
+//        playerHPLabel.text =  "\(playerHP) / 100"
+//        playerMPLabel.text =  "\(playerMP) / 20"
         
         enemyNameLabel.text = "たまご"
         playerImageView.image = UIImage(named: "tamago")
-        enemyHPLabel.text =  "\(enemyHP) / 200"
-        enemyMPLabel.text =  "\(enemyMP) / 35"
+        
+        player = techMonManager.player
+        enemy = techMonManager.enemy
+        
+//        enemyHPLabel.text =  "\(enemyHP) / 200"
+//        enemyMPLabel.text =  "\(enemyMP) / 35"
         
         gameTimer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(updateGame), userInfo: nil, repeats: true)
         gameTimer.fire()
@@ -60,22 +68,20 @@ class BattleViewController: UIViewController {
     
     @objc func updateGame(){
         
-        playerHP += 1
-        if playerMP >= 20{
+        player.currentHP += 1
+        if player.currentMP >= 20{
             isPlayerAttackAvailable = true
-            playerMP = 20
+            player.currentMP = 20
         }else{
             isPlayerAttackAvailable = false
         }
         
-        enemyMP += 1
-        if enemyMP > 35{
+        enemy.currentMP += 1
+        if enemy.currentMP > 35{
             enemyAttack()
-            enemyMP = 0
+            enemy.currentMP = 0
         }
-        
-        playerMPLabel.text =  "\(playerMP) / 20"
-        enemyMPLabel.text =  "\(enemyMP) / 35"
+        updateGame()
         
     }
     
@@ -84,14 +90,30 @@ class BattleViewController: UIViewController {
         techMonManager.damageAnimation(imageView: playerImageView)
         techMonManager.playSE(fileName: "SE_attack")
         
-        playerHP -= 20
+        player.currentHP -= 20
         
-        playerHPLabel.text =  "\(playerHP) / 100"
+        apdateUI()
         
-        if playerHP <= 0{
+        jadgeBattle()
+        
+    }
+    
+    func apdateUI(){
+        
+        playerHPLabel.text = "\(player.currentHP) / \(player.maxHP)"
+        playerMPLabel.text = "\(player.currentMP) / \(player.maxMP)"
+        
+       enemyHPLabel.text = "\(enemy.currentHP) / \(enemy.maxHP)"
+        enemyMPLabel.text = "\(enemy.currentMP) / \(enemy.maxMP)"
+        
+    }
+    
+    func jadgeBattle(){
+        if player.currentHP <= 0{
             finishBattle(vanishImageView: playerImageView, isPlayerWin: false)
+        }else if enemy.currentHP <= 0{
+            finishBattle(vanishImageView: enemyImageView, isPlayerWin: true)
         }
-        
     }
     
     func finishBattle(vanishImageView: UIImageView, isPlayerWin: Bool){
@@ -118,15 +140,13 @@ class BattleViewController: UIViewController {
         if isPlayerAttackAvailable{
             techMonManager.damageAnimation(imageView: enemyImageView)
             techMonManager.playSE(fileName: "SE_attack")
-            enemyHP -= 30
-            playerMP = 0
-            
-            enemyHPLabel.text =  "\(enemyHP) / 200"
-            playerMPLabel.text =  "\(playerMP) / 20"
-            
-            if enemyHP <= 0{
-                finishBattle(vanishImageView: enemyImageView, isPlayerWin: true)
-            }
+            enemy.currentHP -= 30
+            player.currentMP = 0
+            apdateUI()
+            jadgeBattle()
+//            if enemy.currentHP <= 0{
+//                finishBattle(vanishImageView: enemyImageView, isPlayerWin: true)
+//            }
         }
     }
 
