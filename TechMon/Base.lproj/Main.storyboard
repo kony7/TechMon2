@@ -248,6 +248,9 @@
                                     <backgroundConfiguration key="background" image="gold_button.png"/>
                                     <fontDescription key="titleFontDescription" name="MisakiGothic" family="MisakiGothic" pointSize="30"/>
                                 </buttonConfiguration>
+                                <connections>
+                                    <action selector="tameruAction" destination="9nQ-sJ-VV9" eventType="touchUpInside" id="tip-zM-K8s"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XKF-zy-12c">
                                 <rect key="frame" x="151" y="714" width="113" height="70"/>
@@ -258,6 +261,9 @@
                                     <backgroundConfiguration key="background" image="gold_button.png"/>
                                     <fontDescription key="titleFontDescription" name="MisakiGothic" family="MisakiGothic" pointSize="30"/>
                                 </buttonConfiguration>
+                                <connections>
+                                    <action selector="fireAction" destination="9nQ-sJ-VV9" eventType="touchUpInside" id="nfb-bF-omq"/>
+                                </connections>
                             </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Ow2-U0-Sbr"/>
@@ -273,6 +279,7 @@
                         <outlet property="playerImageView" destination="vuX-dI-12l" id="qxc-4h-ZWD"/>
                         <outlet property="playerMPLabel" destination="ch9-AW-z1h" id="iJX-xD-zbq"/>
                         <outlet property="playerNameLabel" destination="dKw-9N-Bot" id="Yus-yp-gIo"/>
+                        <outlet property="playerTPLabel" destination="74C-zT-nyW" id="pvv-eS-c2g"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Mw1-oo-7Kq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

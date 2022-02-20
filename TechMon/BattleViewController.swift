@@ -18,7 +18,7 @@ class BattleViewController: UIViewController {
     @IBOutlet var enemyImageView: UIImageView!
     @IBOutlet var enemyHPLabel: UILabel!
     @IBOutlet var enemyMPLabel: UILabel!
-    
+    @IBOutlet var playerTPLabel: UILabel!
     
     let techMonManager = TechMonManager.shared
     
@@ -42,7 +42,7 @@ class BattleViewController: UIViewController {
 //        playerMPLabel.text =  "\(playerMP) / 20"
         
         enemyNameLabel.text = "たまご"
-        playerImageView.image = UIImage(named: "tamago")
+        enemyImageView.image = UIImage(named: "tamago")
         
         player = techMonManager.player
         enemy = techMonManager.enemy
@@ -102,6 +102,7 @@ class BattleViewController: UIViewController {
         
         playerHPLabel.text = "\(player.currentHP) / \(player.maxHP)"
         playerMPLabel.text = "\(player.currentMP) / \(player.maxMP)"
+        playerTPLabel.text = "\(player.currentTP) / \(player.maxTP)"
         
        enemyHPLabel.text = "\(enemy.currentHP) / \(enemy.maxHP)"
         enemyMPLabel.text = "\(enemy.currentMP) / \(enemy.maxMP)"
@@ -140,13 +141,43 @@ class BattleViewController: UIViewController {
         if isPlayerAttackAvailable{
             techMonManager.damageAnimation(imageView: enemyImageView)
             techMonManager.playSE(fileName: "SE_attack")
-            enemy.currentHP -= 30
+            enemy.currentHP -= player.attackPoint
+            
+            player.currentTP += 10
+            if player.currentTP >= player.maxTP{
+                player.currentTP = player.maxTP
+            }
             player.currentMP = 0
             apdateUI()
             jadgeBattle()
 //            if enemy.currentHP <= 0{
 //                finishBattle(vanishImageView: enemyImageView, isPlayerWin: true)
 //            }
+        }
+    }
+    
+    @IBAction func tameruAction(){
+        if isPlayerAttackAvailable{
+            techMonManager.playSE(fileName: "SE_charge")
+            player.currentTP += 40
+            if player.currentTP >= player.maxTP{
+                player.currentTP = player.maxTP
+            }
+            player.currentMP = 0
+        }
+    }
+    
+    @IBAction func fireAction(){
+        if isPlayerAttackAvailable && player.currentTP >= 40{
+            techMonManager.damageAnimation(imageView: enemyImageView)
+            techMonManager.playSE(fileName: "SE_fire")
+            enemy.currentHP -= 100
+            player.currentTP -= 40
+            if player.currentTP <= 0{
+                player.currentTP = 0
+            }
+            player.currentMP = 0
+            jadgeBattle()
         }
     }
 
